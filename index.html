@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InspireHub</title>
+  <style>
+    :root {
+      --bg-color: #f0f0f0;
+      --text-color: #333;
+      --accent-color: #0077cc;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1e1e1e;
+      --text-color: #f0f0f0;
+      --accent-color: #00bfff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    header {
+      padding: 1rem;
+      text-align: center;
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 1rem;
+    }
+
+    .theme-toggle {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background: var(--accent-color);
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .quote-box {
+      margin: 1rem 0;
+      padding: 1rem;
+      border-left: 4px solid var(--accent-color);
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .accordion {
+      margin-top: 2rem;
+    }
+
+    .accordion-item {
+      margin-bottom: 1rem;
+    }
+
+    .accordion-header {
+      background: var(--accent-color);
+      color: white;
+      padding: 0.5rem;
+      cursor: pointer;
+    }
+
+    .accordion-content {
+      display: none;
+      padding: 0.5rem;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.2rem;
+      }
+
+      .container {
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌟 InspireHub</h1>
+    <p>Your daily dose of motivation</p>
+  </header>
+
+  <div class="container">
+    <div class="theme-toggle">
+      <button onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+
+    <div class="quote-box" id="quoteBox">
+      <strong>Quote:</strong> Loading...
+    </div>
+    <button onclick="fetchQuote()">Get New Quote</button>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">💡 Productivity Tip</div>
+        <div class="accordion-content">Break tasks into small chunks and celebrate small wins.</div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">🧘 Mental Wellness</div>
+        <div class="accordion-content">Take 5-minute breaks every hour to reset your focus.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+    }
+
+    // Load saved theme
+    window.onload = () => {
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      fetchQuote();
+    };
+
+    // Fetch quote from API
+    async function fetchQuote() {
+      const res = await fetch("https://api.quotable.io/random");
+      const data = await res.json();
+      document.getElementById("quoteBox").innerHTML = `<strong>Quote:</strong> ${data.content} — <em>${data.author}</em>`;
+    }
+
+    // Accordion toggle
+    function toggleAccordion(header) {
+      const content = header.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
